@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+html, body {
+    min-height: 100vh;
+    min-width: 100vw ;
+}
+
+body {
+    background: url(../images/bamboo.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.container  {
+    width: 80%;
+    margin: 20px auto;
+    max-width: 960px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+header h1 {
+    background: rgba(255,255,255,.7);
+    padding: 20px 0;
+}
+
+main {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+}
+
+.block {
+    -webkit-order: 0;
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+}
+
+.tetris-wrap {
+    width: 300px;
+    height: 500px;
+    background: url(../images/back_field.png);
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.text-field {
+    background: rgba(255,255,255,.7);
+    margin: 20px 0;
+    padding: 20px;
+}
+
+.start {
+    border: 2px solid #3d6e1c;
+    box-shadow: 1px 1px 4px #c0c0c0;
+    background-color: #fff;
+    display: block;
+    width: 50%;
+    padding: 20px 30px;
+    margin: 0 auto;
+    background-image: url('../images/button_bg.png');
+    background-repeat: no-repeat;
+    background-position: 90% 50%;
+}
+
+.rule {
+    margin-top: 30px;
+}
+
+.score-field {
+    font-size: 42px;
+    padding: 30px 0;
+}
+
+p a, p a:hover, p a:visited {
+    color: #222;
+}
+
+#tetris-field{
+    width: 270px;
+    height: 450px;
+    margin: 24px 19px;
+}
+
+.white {
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border-radius: 100%;
+    float: left;
+}
+
+.orange {
+    width: 30px;
+    height: 30px;
+    background: orange;
+    border-radius: 100%;
+    float: left;
+}
+
+.airbus {
+    width: 30px;
+    height: 30px;
+    background: #48e9c5;
+    border-radius: 100%;
+    float: left;
+}
+
+.airbus2 {
+    width: 30px;
+    height: 30px;
+    background: #fe5000;
+    border-radius: 100%;
+    float: left;
+}
+
+.alcon {
+    width: 30px;
+    height: 30px;
+    background: #49a94a;
+    border-radius: 100%;
+    float: left;
+}
+
+.algonia {
+    width: 30px;
+    height: 30px;
+    background: #8e43e7;
+    border-radius: 100%;
+    float: left;
+}
