@@ -1,77 +1,189 @@
-import init from './components/init.js';
-import draw from './components/draw.js';
-import run from './components/run.js';
-import square from './components/square.js';
+window.onload = function () {
+    let tetris = [];
+    let tetrisField = document.querySelector('#tetris-field');
+    let scoreField = document.querySelector('.score-field');
+    let color = [1, 2, 3, 4, 5]; // кол-во цветов фишек
+    let timer;
+    let score = 0;
+    let flag; // проверка когда запускать след. блок
 
-
-
-
-window.addEventListener('DOMContentLoaded', ()=>{
-  const tetris = []; //определяю общее игровое поле
-  const tetrisField = document.querySelector('#tetris-field');
-  const scoreField = document.querySelector('div.score-field.text-center');
-  const color = [1, 2, 3, 4, 5]; //массив цветов игровых фишек
-  let timer;
-  let score = 0; 
-  let flag;
-  const startBtn = document.querySelector('button.start');
-
-
-
-  //реализация игрового поля в виде столбцов и строк
-  init(9, 15, tetris);
-
-  //рисуем игровое поле
-  draw(tetris, tetrisField, scoreField, score);
-
-  //рисум стартовый элемент
-  square(tetris, color);
-
-  //событие при нажатии кнопки старт
-  startBtn.addEventListener('click', run(tetris, tetrisField, scoreField, score, color, flag, timer) );
-
-  //реализация анимациии
-  document.onkeydown = e => {
-    console.log(e);
-    switch (e.code) {
-      case 'ArrowRight':
-        tetrisRight();
-        break;
-      case 'ArrowLeft':
-        tetrisLeft();
-        break;        
-    }
-    return false;
-  };
-
-  function tetrisRight(){ // проверка можем ли двигать (<10 -  можем)
-    for(let i = tetris.length -1; i>=0; i--) { //перебор снизу вверх
-      for(let j= tetris[i].length - 1; j>=0; j--){ //перебор слева - направо
-        if(tetris[i][j] < 10){ //можно ли двигать элемент
-          if(tetris[i][j] != 0 && tetris[i][j+1] == 0) { //есть что двигать и справа пусто для перемищения
-            //выполняем сдвиг:
-            tetris[i][j+1] = tetris[i][j];
-            tetris[i][j] = 0;
-          }
+    // заполняем массив
+    function init() {
+        let x = 9;
+        let y = 15;
+        for (let i = 0; i < y; i++) {
+            tetris[i] = [];
+            for (let j = 0; j < x; j++) {
+                tetris[i][j] = 0; // 0 - пустое поле!!!!
+            }
         }
-      }
+        //console.table(tetris);
     }
-    draw(tetris, tetrisField, scoreField, score );
-  }
 
-  function tetrisLeft() {
-    for(let i = tetris.length -1; i>=0; i--) { //перебор снизу вверх
-      for(let j= 0; j<tetris[i].length; j++){ //перебор слева - направо
-        if(tetris[i][j] < 10){ //можно ли двигать элемент
-          if(tetris[i][j] != 0 && tetris[i][j-1] == 0) { //есть что двигать и справа пусто для перемищения
-            //выполняем сдвиг:
-            tetris[i][j-1] = tetris[i][j];
-            tetris[i][j] = 0;
-          }
+    //рисуем игровое поле
+    function draw() {
+        let out = '';
+        for (let i = 0; i < tetris.length; i++) {
+            for (let j = 0; j < tetris[i].length; j++) {
+                if (tetris[i][j] == 0) {
+                    out += '<div class="white"></div>';
+                }
+                else if (tetris[i][j] == 1 || tetris[i][j] == 11) {
+                    out += '<div class="orange"></div>';
+                }
+                else if (tetris[i][j] == 2 || tetris[i][j] == 12) {
+                    out += '<div class="airbus"></div>';
+                }
+                else if (tetris[i][j] == 3 || tetris[i][j] == 13) {
+                    out += '<div class="airbus2"></div>';
+                }
+                else if (tetris[i][j] == 4 || tetris[i][j] == 14) {
+                    out += '<div class="algonia"></div>';
+                }
+                else if (tetris[i][j] == 5 || tetris[i][j] == 15) {
+                    out += '<div class="alcon"></div>';
+                }
+            }
         }
-      }
+        tetrisField.innerHTML = out; // перерисовываю игровое поле
+        scoreField.innerHTML = score; // вывожу очки!
+        console.log(tetris);
     }
-    draw(tetris, tetrisField, scoreField, score );
-  }
 
-});
+    // рисуем игровой блок
+    function square() {
+        function randomInteger(min, max) {
+            var rand = min + Math.random() * (max + 1 - min);
+            rand = Math.floor(rand);
+            return rand;
+        }
+        tetris[0][0] = randomInteger(0, color.length);
+        console.log(tetris[0][0]);
+    }
+
+    function run() {
+        timer = setTimeout(function () {
+            if (finish()) return false;
+            draw();
+            flag = true;
+            for (let i = tetris.length - 1; i >= 0; i--) {
+                for (let j = 0; j < tetris[i].length; j++) {
+                    if (tetris[i][j] < 10) {
+                        if (i == tetris.length - 1 && tetris[i][j] != 0) {
+                            tetris[i][j] = tetris[i][j] + 10;
+
+                        }
+                        else if (tetris[i][j] != 0) {
+                            if (tetris[i + 1][j] == 0) {
+                                tetris[i + 1][j] = tetris[i][j];
+                                tetris[i][j] = 0;
+                                flag = false;
+                                if (i + 1 == tetris.length - 1) {
+                                    tetris[i + 1][j] = tetris[i + 1][j] + 10
+                                }
+                            }
+                            else if (tetris[i + 1][j] >= 10) {
+                                tetris[i][j] = tetris[i][j] + 10;
+                            }
+                        }
+                    }
+                }
+            }
+            checkLine();
+            if (flag) square();
+            run();
+        }, 200);
+    }
+
+    function tetrisRight() {
+        for (let i = tetris.length - 1; i >= 0; i--) {
+            for (let j = tetris[i].length - 1; j >= 0; j--) {
+                if (tetris[i][j] < 10) {
+                    if (tetris[i][j] != 0 && tetris[i][j + 1] == 0) {
+                        tetris[i][j + 1] = tetris[i][j];
+                        tetris[i][j] = 0;
+                    }
+                }
+            }
+        }
+        draw();
+    }
+
+    function tetrisLeft() {
+        for (let i = tetris.length - 1; i >= 0; i--) {
+            for (let j = 0; j < tetris[i].length; j++) {
+                if (tetris[i][j] < 10) {
+                    if (tetris[i][j] != 0 && tetris[i][j - 1] == 0) {
+                        tetris[i][j - 1] = tetris[i][j];
+                        tetris[i][j] = 0;
+                    }
+                }
+            }
+        }
+        draw();
+    }
+
+    function checkLine() {
+        for (let i = tetris.length - 1; i >= 0; i--) {
+            for (let j = 0; j < tetris[i].length; j++) {
+                if (tetris[i][j] > 10 && tetris[i][j + 1] != undefined && tetris[i][j + 2] != undefined) {
+                    if (tetris[i][j] == tetris[i][j + 1] && tetris[i][j] == tetris[i][j + 2]) {
+                        tetris[i][j] = 0;
+                        tetris[i][j + 1] = 0;
+                        tetris[i][j + 2] = 0;
+                        score += 30;
+                        for (let m = i; m >= 0; m--) {
+                            if (tetris[m][j] > 10) tetris[m][j] = tetris[m][j] - 10;
+                            if (tetris[m][j + 1] > 10) tetris[m][j + 1] = tetris[m][j + 1] - 10;
+                            if (tetris[m][j + 2] > 10) tetris[m][j + 2] = tetris[m][j + 2] - 10;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function finish() {
+        let stop = false;
+        for (let i = tetris.length - 1; i >= 0; i--) {
+            for (let j = 0; j < tetris[i].length; j++) {
+                stop = true;
+                for (let k = 0; k < tetris.length; k++) {
+                    if (tetris[k][j] == 0) {
+                        stop = false;
+                        break;
+                    }
+                }
+                if (stop) {
+                    clearTimeout(timer);
+                    alert('Stop');
+                    break;
+                }
+            }
+            if (stop) break;
+        }
+        return stop;
+    }
+
+
+
+    document.querySelector('.start').onclick = function () {
+        clearTimeout(timer);
+        init();
+        draw();
+        square();
+        run();
+    };
+    document.onkeydown = function (event) {
+        switch (event.code) {
+            case "ArrowRight":
+                tetrisRight();
+                break;
+            case "ArrowLeft":
+                tetrisLeft();
+                break;
+        }
+        return false;
+    }
+
+}
